@@ -36,6 +36,9 @@
                     </v-avatar>
                      <p class="white--text subheading mt-1 text-xs-center">Alex Smith</p>
                 </v-flex>
+                <v-flex class="mt-4 mb-3">
+                    <Popup />
+                </v-flex>
             </v-layout>
 
             <v-list>
@@ -54,17 +57,19 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-        drawer: false,
-        links: [
-            { icon: 'dashboard', text: 'Dashboard', route: '/' },
-            { icon: 'folder', text: 'My Projects', route: '/projects' },
-            { icon: 'person', text: 'Team', route: '/team' },
-        ]
-    }
-  }
+    import Popup from './Popup'
+    export default {
+        components: { Popup },
+        data() {
+            return {
+                drawer: false,
+                links: [
+                    { icon: 'dashboard', text: 'Dashboard', route: '/' },
+                    { icon: 'folder', text: 'My Projects', route: '/projects' },
+                    { icon: 'person', text: 'Team', route: '/team' },
+                ]
+            }
+        }
 }
 </script>
 
