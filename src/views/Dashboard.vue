@@ -1,8 +1,8 @@
 <template>
     <div class="dashboard">
-        <h1 class="subheading grey--text">Dashboard</h1>
+        <h1 class="subheading grey--text text-xs-center mt-5">Dashboard</h1>
 
-        <v-container class="my-5">
+        <v-container class="my-4">
             <v-layout row class="mb-3">
                 <v-tooltip top>
                     <v-btn small flat color="grey"  @click="sortBy('title')" slot="activator">
@@ -51,43 +51,54 @@
 </template>
 
 <script>
+    import db from '@/fb';
+
     export default {
         data() {
             return {
-                projects: [
-                    { title: 'Design a new logo', person: 'Alex Smith', due: '1st Jan 2019', status: 'ongoing', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                    { title: 'Code up the homepage', person: 'Anna Stone', due: '10th Jan 2019', status: 'complete', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                    { title: 'Design video thumbnails', person: 'Oliver Todd', due: '20th Dec 2018', status: 'complete', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                    { title: 'Create a video chat', person: 'Chun Li', due: '20th Oct 2018', status: 'overdue', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                ]
+                projects: []
             }
         },
         methods: {
             sortBy(prop) {
                 this.projects.sort((a,b) => a[prop] < b[prop] ? -1 : 1) 
             }
+        },
+        created() {
+            db.collection('projects').onSnapshot(res => {
+                const changes = res.docChanges()
+
+                changes.forEach(change => {
+                    if(change.type === 'added') {
+                        this.projects.push({ 
+                            ...change.doc.data(),  //takes all properties and spreads them into an object for each
+                            id: change.doc.id     //id from the store
+                        }) 
+                    }
+                })
+            })         
         }
     }
 </script>
 
 <style>
 .project.complete {
-    border-left: 4px solid #3CD1C2; 
+    border-left: 4px solid #6ca78c; 
 }
 .project.ongoing {
-     border-left: 4px solid orange
+     border-left: 4px solid #ECB866
 }
 .project.overdue {
-    border-left: 4px solid tomato;
+    border-left: 4px solid #e25021;
 }
 .v-chip.complete {
-    background: #3cd1c2;
+    background: #6ca78c;
 }
 .v-chip.ongoing {
-    background: #ffaa2c;
+    background: #ECB866;
 }
 .v-chip.overdue{ 
-    background: #f83e70;
+    background: #e25021;
 }
 
 </style>
