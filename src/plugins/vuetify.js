@@ -5,10 +5,11 @@ import 'vuetify/src/stylus/app.styl'
 Vue.use(Vuetify, {
   iconfont: 'md',
   theme: {
-    primary: '#9652ff',
-    success: '#3cd1c2',
+    primary: '#7299b1',
+    success: '#96b19c',
     info: '#ffaa2c',
     error: '#f83e70'
   }
 })
 // overriden default colors
+

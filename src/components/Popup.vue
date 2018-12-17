@@ -1,5 +1,5 @@
 <template>
-    <v-dialog max-width="600px">
+    <v-dialog max-width="600px" v-model="dialog">
         <v-btn flat slot="activator" class="success">Add New Project</v-btn>
         <v-card>
             <v-card-title>
@@ -19,7 +19,7 @@
 
                     <v-spacer></v-spacer>
                     <div class="text-xs-center">
-                        <v-btn flat @click="submit" class="success mx-0 mt-3">Add Project</v-btn>
+                        <v-btn flat @click="submit" class="success mx-0 mt-3" :loading="loading">Add Project</v-btn>
                     </div> 
                     </v-form>
             </v-card-text>
@@ -28,7 +28,9 @@
 </template>
 
 <script>
-    import format from 'date-fns/format'
+    import format from 'date-fns/format';
+    import db from '@/fb';
+
     export default {
         data() {
             return {
@@ -39,19 +41,38 @@
                 inputRules: [
                     v => !!v || 'This field is required',
                     v => v.length >= 3 || 'Minimum length is 3 characters'
-                ]
+                ],
+                loading: false,
+                dialog: false
             }
         },
         methods: {
             submit() {
                 if(this.$refs.form.validate()) {
-                    console.log(this.title, this.content)
+                    this.loading = true;
+
+                    const project = {
+                        title: this.title,
+                        content: this.content,
+                        due: format(this.due, 'Do MMM YYYY'),
+                        person: 'Alex Smith',
+                        status: 'ongoing'
+                    }
+
+                    db.collection('projects').add(project)
+                        .then(() => {
+                            console.log('added to db')
+
+                            this.loading = false;
+                            this.dialog = false;
+                            this.$emit('projectAdded')
+                        })
                 }  
             }
         },
         computed: {
             formattedDate () {
-                console.log(this.due)
+                console.log(this.due);
                 return this.due ? format(this.due, 'Do MMM YYYY') : ''
             }
         }

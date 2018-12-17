@@ -1,7 +1,7 @@
 <template>
     <div class="team">
-        <h1 class="subheading grey--text">Team</h1>
-        <v-container class="my-5">
+        <h1 class="subheading grey--text text-xs-center mt-5">Team</h1>
+        <v-container class="my-4">
             <v-layout row wrap>
                 <v-flex xs12 sm6 md 4 lg3 v-for="person in team" :key="person.name">
                     <v-card flat class="text-xs-center ma-3">
@@ -16,7 +16,7 @@
                             <div class="grey--text">{{ person.role }}</div>
                         </v-card-text>
 
-                        <v-card-actions>
+                        <v-card-actions class="justify-center">
                             <v-btn flat color="grey">
                                 <v-icon small left>message</v-icon>
                                 <span>Message</span>
@@ -30,17 +30,29 @@
 </template>
 
 <script>  
+    import db from '@/fb';
+
     export default {
         data() {
             return {
-                team: [
-                    { name: 'Alex Smith', role: 'Web developer', avatar: '/avatar-1.png'},
-                    { name: 'Anna Stone', role: 'Graphic designer', avatar: '/avatar-2.png' },
-                    { name: 'Oliver Todd', role: 'Web developer', avatar: '/avatar-3.png' },
-                    { name: 'Chun Li', role: 'Social media maverick', avatar: '/avatar-4.png' },
-                    { name: 'Sarah Anderson', role: 'Sales guru', avatar: '/avatar-5.jpg'}
-                ]
+                team: []
             }
+        },
+        created() {
+            db.collection('team').onSnapshot(res => {
+                const changes = res.docChanges();
+
+                changes.forEach(change => {
+                    if(change.type === 'added') {
+                        this.team.push({ 
+                            ...change.doc.data(),  
+                            id: change.doc.id    
+                        }) 
+                    }
+                });
+
+                this.team.sort((a,b) => a['name'] < b['name'] ? -1 : 1); 
+            })         
         }    
     }
 </script>
