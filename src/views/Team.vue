@@ -48,6 +48,10 @@
                             ...change.doc.data(),  
                             id: change.doc.id    
                         }) 
+                        this.$store.state.users.push({ 
+                            ...change.doc.data(),  //takes all properties and spreads them into an object for each
+                            id: change.doc.id     //id from the store
+                        })
                     }
                 });
 
