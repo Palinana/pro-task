@@ -46,7 +46,6 @@
                 <v-divider></v-divider>
             </v-card>
         </v-container>
-        
     </div>
 </template>
 
@@ -73,11 +72,16 @@
                         this.projects.push({ 
                             ...change.doc.data(),  //takes all properties and spreads them into an object for each
                             id: change.doc.id     //id from the store
-                        }) 
+                        })
                     }
                 })
-            })         
-        }
+            }) 
+        },
+        computed: {
+            currentUser() {
+                return this.$store.state.currentUser
+            }
+    }
     }
 </script>
 

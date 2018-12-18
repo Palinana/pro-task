@@ -72,7 +72,6 @@
         },
         computed: {
             formattedDate () {
-                console.log(this.due);
                 return this.due ? format(this.due, 'Do MMM YYYY') : ''
             }
         }

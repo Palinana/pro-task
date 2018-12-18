@@ -26,7 +26,7 @@
                 </v-list>
             </v-menu>
 
-            <v-btn flat color="grey">
+            <v-btn flat to="/" @click="logout" color="grey">
                 <span>Sign Out</span>
                 <v-icon right>exit_to_app</v-icon>
             </v-btn>
@@ -62,19 +62,35 @@
 
 <script>
     import Popup from './Popup'
+    import firebase from 'firebase'
+    import db from '@/fb';
+    import store from '@/store'
     export default {
         components: { Popup },
         data() {
             return {
                 drawer: false,
+                userData: [],
                 links: [
-                    { icon: 'dashboard', text: 'Dashboard', route: '/' },
+                    { icon: 'dashboard', text: 'Dashboard', route: '/dashboard' },
                     { icon: 'folder', text: 'My Projects', route: '/projects' },
                     { icon: 'person', text: 'Team', route: '/team' },
                 ],
                 snackbar: false
             }
-        }
+        },
+        methods: {
+            logout() {
+                firebase.auth().signOut()
+                    .then(() => {
+                        store.commit('setCurrentUser', null);
+                        this.$router.push('/')
+                    })
+                    .catch((err) => {
+                        return err
+                    })
+            }
+        }        
 }
 </script>
 
